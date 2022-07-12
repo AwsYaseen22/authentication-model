@@ -1,0 +1,35 @@
+{
+  "name": "authentication-model",
+  "version": "1.0.0",
+  "description": "authentication model use Bcrypt, JWT, Express, MongoDB",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AwsYaseen22/authentication-model.git"
+  },
+  "keywords": [
+    "Bcrypt",
+    "JWT",
+    "Express",
+    "MongoDB"
+  ],
+  "author": "Aws",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AwsYaseen22/authentication-model/issues"
+  },
+  "homepage": "https://github.com/AwsYaseen22/authentication-model#readme",
+  "dependencies": {
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "mongoose": "^6.4.4"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.19"
+  }
+}
