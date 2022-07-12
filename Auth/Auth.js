@@ -1,4 +1,5 @@
 const User = require("../model/User");
+const bcrypt = require("bcryptjs");
 
 exports.register = async (req, res, next) => {
   const { username, password } = req.body;
@@ -8,9 +9,11 @@ exports.register = async (req, res, next) => {
       .json({ message: "Password must be 6 characters or more" });
   }
   try {
+    let salt = await bcrypt.genSalt(10);
+    let hash = await bcrypt.hash(password, salt);
     let user = await User.create({
       username,
-      password,
+      password: hash,
     });
     if (user) {
       res.status(200).json({ message: "User succeffully created!", user });
@@ -28,21 +31,29 @@ exports.login = async (req, res, next) => {
     return res.status(400).json({ message: "Username and password required" });
   }
   try {
-    const user = await User.findOne({ username, password });
+    const user = await User.findOne({
+      username,
+    });
+
     if (!user) {
       res.status(401).json({
         message: "Check username and password!",
         error: "user not found",
       });
     } else {
-      res.status(200).json({
-        message: "Loged in successfully",
-        user,
-      });
+      const logged = await bcrypt.compare(password, user.password);
+      if (logged) {
+        res.status(200).json({
+          message: "Loged in successfully",
+          user,
+        });
+      } else {
+        throw "no match";
+      }
     }
   } catch (error) {
     res.status(400).json({
-      message: "error occured",
+      message: "No match",
       error: error.message,
     });
   }
