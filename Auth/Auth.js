@@ -47,3 +47,26 @@ exports.login = async (req, res, next) => {
     });
   }
 };
+
+exports.update = async (req, res, next) => {
+  const { role, id } = req.body;
+  if (role && id) {
+    if (role === "Admin") {
+      try {
+        const user = await User.findById(id);
+        user.role = user.role === "Basic" ? "Admin" : "Basic";
+        await user.save();
+        res.status(201).json({ message: "changed successfully", user });
+      } catch (error) {
+        res.status(400).json({ message: "check user id" }, error);
+        process.exit(1);
+      }
+    } else {
+      res.status(400).json({
+        message: "You dont have this privelage!",
+      });
+    }
+  } else {
+    res.status(400).json({ message: "your role or id is messing" });
+  }
+};
