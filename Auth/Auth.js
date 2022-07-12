@@ -70,3 +70,28 @@ exports.update = async (req, res, next) => {
     res.status(400).json({ message: "your role or id is messing" });
   }
 };
+
+exports.deleteUser = async (req, res, next) => {
+  const { role, id } = req.body;
+  if (role && id) {
+    if (role === "Admin") {
+      let user = await User.findByIdAndDelete(id);
+      if (user) {
+        res.status(201).json({ message: "user deleted successfully: ", user });
+      } else {
+        res.status(400).json({
+          message: "user not found",
+        });
+      }
+    } else {
+      res
+        .status(400)
+        .json({ message: "you dont have this previlage to delete a user!" });
+    }
+  } else {
+    res.status(400).json({
+      message:
+        "your role and the id of the user you want to delete is required!",
+    });
+  }
+};
