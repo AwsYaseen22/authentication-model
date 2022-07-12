@@ -6,7 +6,6 @@ const connectDB = require("./db");
 
 connectDB();
 
-console.log(PORT);
 app.use(express.json());
 app.use("/api/Auth", require("./Auth/Route"));
 
