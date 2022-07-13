@@ -1,5 +1,26 @@
 const User = require("../model/User");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const jwtSecret = process.env.JWT_SECRET;
+const verifyToken = require("./verifyToken");
+
+// create a secret by using in node:
+// require('crypto').randomBytes(35).toString('hex')
+
+// Generate token
+function generateToken(user) {
+  const maxAge = 3 * 60 * 60;
+  const token = jwt.sign(
+    {
+      id: user._id,
+      username: user.username,
+      role: user.role,
+    },
+    jwtSecret,
+    { expiresIn: maxAge }
+  );
+  return token;
+}
 
 exports.register = async (req, res, next) => {
   const { username, password } = req.body;
@@ -16,6 +37,11 @@ exports.register = async (req, res, next) => {
       password: hash,
     });
     if (user) {
+      //   create and assign token
+      const token = generateToken(user);
+      //   res.cookie =
+      //     ("auth-token", token, { httpOnly: true, maxAge: maxAge * 1000 });
+      res.header("auth-token", token);
       res.status(200).json({ message: "User succeffully created!", user });
     }
   } catch (error) {
@@ -42,7 +68,12 @@ exports.login = async (req, res, next) => {
       });
     } else {
       const logged = await bcrypt.compare(password, user.password);
+      //   create and assign token
+      const token = generateToken(user);
       if (logged) {
+        // res.cookie =
+        //   ("auth-token", token, { httpOnly: true, maxAge: maxAge * 1000 });
+        res.header("auth-token", token);
         res.status(200).json({
           message: "Loged in successfully",
           user,
