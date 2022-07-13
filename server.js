@@ -13,8 +13,9 @@ app.use(cookieParser());
 
 app.use("/api/Auth", require("./Auth/Route"));
 
+// protect these routes for admins and basic users
 app.get("/admin", adminAuth, (req, res) => res.send("Admin Route"));
-app.get("/basic", adminAuth, (req, res) => res.send("Basic User Route"));
+app.get("/basic", userAuth, (req, res) => res.send("Basic User Route"));
 
 const server = app.listen(PORT, () => {
   console.log(`Connected to the sever successfully! port:${PORT}`);
