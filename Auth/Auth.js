@@ -39,9 +39,9 @@ exports.register = async (req, res, next) => {
     if (user) {
       //   create and assign token
       const token = generateToken(user);
-      //   res.cookie =
-      //     ("auth-token", token, { httpOnly: true, maxAge: maxAge * 1000 });
-      res.header("auth-token", token);
+      const maxAge = 3 * 60 * 60;
+      res.cookie = ("jwt", token, { httpOnly: true, maxAge: maxAge * 1000 });
+      //   res.header("auth-token", token);
       res.status(200).json({ message: "User succeffully created!", user });
     }
   } catch (error) {
@@ -52,6 +52,7 @@ exports.register = async (req, res, next) => {
 };
 
 exports.login = async (req, res, next) => {
+  console.log(req);
   const { username, password } = req.body;
   if (!username || !password) {
     return res.status(400).json({ message: "Username and password required" });
@@ -71,9 +72,10 @@ exports.login = async (req, res, next) => {
       //   create and assign token
       const token = generateToken(user);
       if (logged) {
-        // res.cookie =
-        //   ("auth-token", token, { httpOnly: true, maxAge: maxAge * 1000 });
-        res.header("auth-token", token);
+        const maxAge = 3 * 60 * 60;
+        console.log({ token });
+        res.cookie = ("jwt", token, { httpOnly: true, maxAge: maxAge * 1000 });
+        // res.header("auth-token", token);
         res.status(200).json({
           message: "Loged in successfully",
           user,
@@ -135,5 +137,20 @@ exports.deleteUser = async (req, res, next) => {
       message:
         "your role and the id of the user you want to delete is required!",
     });
+  }
+};
+
+exports.getUsers = async (req, res, next) => {
+  try {
+    const users = await User.find({});
+    const usersList = users.map((user) => {
+      return {
+        username: user.username,
+        role: user.role,
+      };
+    });
+    res.status(200).json({ user: usersList });
+  } catch (err) {
+    res.status(401).json({ message: "Not successfull", error: err.message });
   }
 };

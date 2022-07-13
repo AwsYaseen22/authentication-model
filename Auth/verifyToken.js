@@ -2,9 +2,9 @@ const jwt = require("jsonwebtoken");
 const JWT_SECRET = process.env.JWT_SECRET;
 
 exports.adminAuth = (req, res, next) => {
-  const token = req.header("auth-token");
+  // const token = req.header("auth-token");
   //   if use cookies
-  //   const token = req.cookies.jwt;
+  const token = req.cookies.jwt;
 
   if (!token) {
     return res.status(401).json({ message: "Access denied!" });
@@ -27,9 +27,9 @@ exports.adminAuth = (req, res, next) => {
 };
 
 exports.userAuth = (req, res, next) => {
-  const token = req.header("auth-token");
+  // const token = req.header("auth-token");
   //   if use cookies
-  //   const token = req.cookies.jwt;
+  const token = req.cookies.jwt;
 
   if (!token) {
     return res.status(401).json({ message: "Access denied!" });
