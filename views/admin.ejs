@@ -20,13 +20,14 @@
                 const res = await fetch( '/api/auth/getUsers' )
                 const data = await res.json()
                 console.log( { data } );
+                data.user = data.user.filter( user => user.username !== 'admin' )
                 data.user.map( ( mappedUser ) => {
-                    if ( mappedUser.username !== 'admin' ) {
-                        let li = `<li> <b>Username</b> => ${mappedUser.username} ${mappedUser.id} <br> <b>Role</b> => ${mappedUser.role} </li> <button class="edit">Edit Role</button> <button class="delete">Delete User</button>`
-                        ul.innerHTML += li
-                    } else {
-                        return null
-                    }
+                    // if ( mappedUser.username !== 'admin' ) {
+                    let li = `<li> <b>Username</b> => ${mappedUser.username} ${mappedUser.id} <br> <b>Role</b> => ${mappedUser.role} </li> <button class="edit">Edit Role</button> <button class="delete">Delete User</button>`
+                    ul.innerHTML += li
+                    // } else {
+                    //     return null
+                    // }
                     const editRole = document.querySelectorAll( '.edit' )
                     const deleteUser = document.querySelectorAll( '.delete' )
                     editRole.forEach( ( button, i ) => {
@@ -39,7 +40,7 @@
                                 headers: { 'Content-Type': 'application/json' }
                             } )
                             const dataUpdate = await res.json()
-                            alert( JSON.stringify( dataUpdate ) )
+                            // alert( JSON.stringify( dataUpdate ) )
                             if ( res.status === 400 || res.status === 401 ) {
                                 document.body.scrollTop = 0
                                 document.documentElement.scrollTop = 0
