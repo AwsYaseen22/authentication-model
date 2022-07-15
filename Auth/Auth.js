@@ -40,9 +40,12 @@ exports.register = async (req, res, next) => {
       //   create and assign token
       const token = generateToken(user);
       const maxAge = 3 * 60 * 60;
-      res.cookie = ("jwt", token, { httpOnly: true, maxAge: maxAge * 1000 });
+      //   res.cookie = ("jwt", token, { httpOnly: true, maxAge: maxAge * 1000 });
       //   res.header("auth-token", token);
-      res.status(200).json({ message: "User succeffully created!", user });
+      res
+        .status(200)
+        .cookie("jwt", token, { httpOnly: true, maxAge: maxAge * 1000 })
+        .json({ message: "User succeffully created!", user });
     }
   } catch (error) {
     res
@@ -52,8 +55,8 @@ exports.register = async (req, res, next) => {
 };
 
 exports.login = async (req, res, next) => {
-  console.log(req);
   const { username, password } = req.body;
+  //   console.log("1111111111", username, password);
   if (!username || !password) {
     return res.status(400).json({ message: "Username and password required" });
   }
@@ -61,7 +64,7 @@ exports.login = async (req, res, next) => {
     const user = await User.findOne({
       username,
     });
-
+    // console.log("2222222", { user });
     if (!user) {
       res.status(401).json({
         message: "Check username and password!",
@@ -69,17 +72,22 @@ exports.login = async (req, res, next) => {
       });
     } else {
       const logged = await bcrypt.compare(password, user.password);
+
       //   create and assign token
       const token = generateToken(user);
+      //   console.log("3333333", token);
       if (logged) {
         const maxAge = 3 * 60 * 60;
-        console.log({ token });
-        res.cookie = ("jwt", token, { httpOnly: true, maxAge: maxAge * 1000 });
+        // res.cookie = ("jwt", token, { httpOnly: true, maxAge: maxAge * 1000 });
+        // console.log("res.cookie: ", res);
         // res.header("auth-token", token);
-        res.status(200).json({
-          message: "Loged in successfully",
-          user,
-        });
+        res
+          .status(200)
+          .cookie("jwt", token, { httpOnly: true, maxAge: maxAge * 1000 })
+          .json({
+            message: "Loged in successfully",
+            user,
+          });
       } else {
         throw "no match";
       }
@@ -94,6 +102,7 @@ exports.login = async (req, res, next) => {
 
 exports.update = async (req, res, next) => {
   const { role, id } = req.body;
+  console.log({ role, id });
   if (role && id) {
     if (role === "Admin") {
       try {
@@ -141,10 +150,12 @@ exports.deleteUser = async (req, res, next) => {
 };
 
 exports.getUsers = async (req, res, next) => {
+  //   console.log("reaaaaaaaached here");
   try {
     const users = await User.find({});
     const usersList = users.map((user) => {
       return {
+        id: user._id,
         username: user.username,
         role: user.role,
       };

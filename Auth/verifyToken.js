@@ -2,6 +2,8 @@ const jwt = require("jsonwebtoken");
 const JWT_SECRET = process.env.JWT_SECRET;
 
 exports.adminAuth = (req, res, next) => {
+  // console.log("token in admin auth: ", req.cookies);
+  // if use header
   // const token = req.header("auth-token");
   //   if use cookies
   const token = req.cookies.jwt;
@@ -27,6 +29,8 @@ exports.adminAuth = (req, res, next) => {
 };
 
 exports.userAuth = (req, res, next) => {
+  // console.log("coooooookies", req.cookies.jwt);
+
   // const token = req.header("auth-token");
   //   if use cookies
   const token = req.cookies.jwt;

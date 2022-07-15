@@ -34,10 +34,13 @@
                         headers: { 'Content-Type': 'application/json' }
                     } )
                     const data = await res.json()
+                    alert( JSON.stringify( data ) )
                     if ( res.status === 400 || res.status === 401 ) {
+                        // console.log( 'hereeeeeeeee' );
                         return display.textContent = `${data.message}. ${data.error ? data.error : ''}`
                     }
-                    data.role === "Admin" ? location.assign( '/admin' ) : location.assign( '/basic' )
+                    console.log( { data } );
+                    data.user.role === "Admin" ? location.assign( '/admin' ) : location.assign( '/basic' )
                 } catch ( err ) {
                     console.log( err.message )
                 }

@@ -12,6 +12,6 @@ router.route("/login").post(login);
 // protect the following routes to admin only
 router.route("/update").put(adminAuth, update);
 router.route("/deleteUser").delete(adminAuth, deleteUser);
-router.route("/getUsers").delete(adminAuth, getUsers);
+router.route("/getUsers").get(adminAuth, getUsers);
 
 module.exports = router;
