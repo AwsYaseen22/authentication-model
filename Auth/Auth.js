@@ -129,6 +129,7 @@ exports.deleteUser = async (req, res, next) => {
   if (role && id) {
     if (role === "Admin") {
       let user = await User.findByIdAndDelete(id);
+      console.log({ user });
       if (user) {
         res.status(201).json({ message: "user deleted successfully: ", user });
       } else {
