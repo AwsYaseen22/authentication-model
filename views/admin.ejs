@@ -14,12 +14,14 @@
         <ul></ul>
         <button class="logout"> <a href="/logout">Log Out</a></button>
         <script>
+            console.log( 'front cookie', document.cookies );
             const ul = document.querySelector( 'ul' )
             const display = document.querySelector( '.display' )
             const getUsers = async () => {
                 const res = await fetch( '/api/auth/getUsers' )
                 const data = await res.json()
                 console.log( { data } );
+                const role = data.details.role
                 data.user = data.user.filter( user => user.username !== 'admin' )
                 data.user.map( ( mappedUser ) => {
                     // if ( mappedUser.username !== 'admin' ) {
@@ -36,7 +38,7 @@
                             const id = data.user[i].id
                             const res = await fetch( '/api/auth/update', {
                                 method: 'PUT',
-                                body: JSON.stringify( { role: 'Admin', id } ),
+                                body: JSON.stringify( { role: role, id } ),
                                 headers: { 'Content-Type': 'application/json' }
                             } )
                             const dataUpdate = await res.json()
@@ -56,7 +58,7 @@
                             console.log( { id } );
                             const res = await fetch( '/api/auth/deleteUser', {
                                 method: 'DELETE',
-                                body: JSON.stringify( { role: 'Admin', id } ),
+                                body: JSON.stringify( { role: role, id } ),
                                 headers: { 'Content-Type': 'application/json' }
                             } )
                             const dataDelete = await res.json()

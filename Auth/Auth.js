@@ -2,7 +2,7 @@ const User = require("../model/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const jwtSecret = process.env.JWT_SECRET;
-const verifyToken = require("./verifyToken");
+const { tokenDetails } = require("./verifyToken");
 
 // create a secret by using in node:
 // require('crypto').randomBytes(35).toString('hex')
@@ -152,6 +152,9 @@ exports.deleteUser = async (req, res, next) => {
 
 exports.getUsers = async (req, res, next) => {
   //   console.log("reaaaaaaaached here");
+  let token = req.cookies.jwt;
+  //   console.log("token details: ", tokenDetails(token));
+  //   let details = tokenDetails(token);
   try {
     const users = await User.find({});
     const usersList = users.map((user) => {
@@ -161,7 +164,7 @@ exports.getUsers = async (req, res, next) => {
         role: user.role,
       };
     });
-    res.status(200).json({ user: usersList });
+    res.status(200).json({ user: usersList, details: tokenDetails(token) });
   } catch (err) {
     res.status(401).json({ message: "Not successfull", error: err.message });
   }

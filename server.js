@@ -26,7 +26,7 @@ app.get("/logout", (req, res) => {
 });
 
 // protect these routes for admins and basic users
-app.get("/admin", (req, res) => res.render("admin"));
+app.get("/admin", adminAuth, (req, res) => res.render("admin"));
 app.get("/basic", userAuth, (req, res) => res.render("user"));
 
 const server = app.listen(PORT, () => {

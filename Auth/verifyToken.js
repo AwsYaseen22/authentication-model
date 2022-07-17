@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const JWT_SECRET = process.env.JWT_SECRET;
 
 exports.adminAuth = (req, res, next) => {
+  console.log("admin auth calllllllllllled");
   // console.log("token in admin auth: ", req.cookies);
   // if use header
   // const token = req.header("auth-token");
@@ -29,6 +30,7 @@ exports.adminAuth = (req, res, next) => {
 };
 
 exports.userAuth = (req, res, next) => {
+  console.log("user auth calllllllllllled");
   // console.log("coooooookies", req.cookies.jwt);
 
   // const token = req.header("auth-token");
@@ -52,5 +54,22 @@ exports.userAuth = (req, res, next) => {
     });
   } catch (error) {
     res.status(400).json({ message: "Invalid token!" }, console.error);
+  }
+};
+
+exports.tokenDetails = (token) => {
+  // const token = req.cookies.jwt;
+  if (!token) {
+    return null;
+  } else {
+    let details;
+    return jwt.verify(token, JWT_SECRET, (err, tokenData) => {
+      if (err) {
+        return err;
+      }
+      details = tokenData;
+      return details;
+    });
+    // return details;
   }
 };
